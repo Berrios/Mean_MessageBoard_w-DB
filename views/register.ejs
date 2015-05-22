@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title><%= title %></title>
+		<script src="/javascript/jquery.min.js"></script>
+		<script src="/socket.io/socket.io.js"></script>
+	</head>
+	<body>
+		<div id="wrapper">
+			<p><a href="./login">login</a> | Register </p> 
+
+			<div id="err"><%= message %></div>
+			<form id="register" action="/register" method="post">
+				User name:<br>
+				<input type="text" name="username" id="username">
+				<br>
+				User password:<br>
+				<input type="text" name="password" id="password">
+				<br>
+				Confirm password:<br>
+				<input type="text" name="confPsw" id="confPsw">
+				<br>
+				<input type="submit" id="submit" value="Submit">
+			</form>
+		</div>
+	</body>
+</html>

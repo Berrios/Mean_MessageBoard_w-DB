@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title><%= title %></title>
+		<script src="/javascript/jquery.min.js"></script>
+		<script src="/socket.io/socket.io.js"></script>
+		<script type="text/javascript">
+				$(document).ready(function(){
+				io = io.connect();
+
+				io.emit("page_load");
+
+				io.on("get_user_name", function(data){
+					// var name = prompt("Please enter your name:");
+					io.emit("new_user", {name: data.name});
+				});
+
+				$("#new_message").submit(function(){
+					io.emit("new_message", {message: $("#message").val()});
+					$("#new_message").each(function(){
+						this.reset();
+					});
+					return false;
+				})
+
+				io.on("load_messages", function(data){
+					var messages = data.messages; 
+					var message_thread = "";
+
+					for(var ctr = 0; ctr < messages.length; ctr ++)
+					{
+						message_thread += "<p>" + messages[ctr].name + ": " + messages[ctr].message + "</p>";
+					}
+
+					$("#message_board").append(message_thread)
+				});
+
+				io.on("post_new_message", function(data){
+					$("#message_board").append("<p>"+ data.user +": "+ data.new_message +"</p>");
+					$("#message_board").each(function(){
+						this.reset();
+					});
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<div id="wrapper">
+			<form id="logout" action="/logout" method="post"><input type="submit" value="Logout" id="logout"></form>
+			<h5 id="user_name"><%= message %></h5>
+			<p>Conversation Board</p>
+			<div id="message_board"></div>
+			<form id="new_message">
+				<input type="text" id="message" placeholder="enter your message here" />
+				<input type="submit" value="send" />
+			</form>
+		</div>
+	</body>
+</html>
